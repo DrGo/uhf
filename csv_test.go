@@ -5,8 +5,9 @@ import (
 	"testing"
 )
 
+var numRecs = 3
+
 func TestCSVSliceChan(t *testing.T) {
-	numRecs := 3
 	var recs [][]string
 	reader := CSVToSliceChan("test_data/sample.csv")
 	for rec := range reader.C {
@@ -18,5 +19,16 @@ func TestCSVSliceChan(t *testing.T) {
 
 	if reader.Error() != io.EOF {
 		t.Fatalf("Expected EOF, got %s\n", reader.Error())
+	}
+}
+
+func TestCSVToSlice(t *testing.T) {
+	recs, err := CSVToSlice("test_data/sample.csv")
+	if len(recs) != numRecs {
+		t.Fatalf("Expected %d records, got %d\n", numRecs, len(recs))
+	}
+
+	if err != io.EOF {
+		t.Fatalf("Expected EOF, got %s\n", err)
 	}
 }

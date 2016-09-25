@@ -31,7 +31,8 @@ func (c *CSVChan) setError(err error) {
 }
 
 // CSVToSliceChan is a convenience for reading
-// a CSV file into slices of strings.
+// a CSV file into slices of strings without
+// loading the entire CSV file into memory.
 func CSVToSliceChan(filename string) *CSVChan {
 	out := newCSVChan()
 	f, err := os.Open(filename)
@@ -59,4 +60,16 @@ func CSVToSliceChan(filename string) *CSVChan {
 
 func newCSVChan() *CSVChan {
 	return &CSVChan{C: make(chan []string)}
+}
+
+// CSVToSlice is a convenience function for slurping
+// a CSV file into a [][]string. It loads the whole file
+// at once, so this shouldn't be used with huge files.
+func CSVToSlice(filename string) ([][]string, error) {
+	var recs [][]string
+	reader := CSVToSliceChan(filename)
+	for rec := range reader.C {
+		recs = append(recs, rec)
+	}
+	return recs, reader.Error()
 }
