@@ -1,6 +1,9 @@
 package uhf
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
 
 // IsInteractive returns a boolean
 // indicating whether os.Stdin is
@@ -14,4 +17,8 @@ func IsInteractive() (bool, error) {
 		return false, err
 	}
 	return stat.Mode()&os.ModeCharDevice != 0, nil
+}
+
+func BinDir() (string, error) {
+	return filepath.Abs(os.Args[0])
 }
