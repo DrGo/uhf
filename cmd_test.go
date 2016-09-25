@@ -19,3 +19,19 @@ func TestBinDir(t *testing.T) {
 		t.Fatal("Expected path from BinDir, got nothing.")
 	}
 }
+
+func TestFileExists(t *testing.T) {
+	wanted := []struct {
+		path   string
+		exists bool
+	}{
+		{"README.md", true},
+		{"fake.txt", false},
+	}
+
+	for _, item := range wanted {
+		if FileExists(item.path) != item.exists {
+			t.Fatalf("expected %t for %q.\n", item.exists, item.path)
+		}
+	}
+}
