@@ -28,4 +28,4 @@ easy to find, so I can re-type them less frequently.
 
 # Why is it named UHF?
 
-[http://weirdal.com/]("Weird Al" Yankovic)
+["Weird Al" Yankovic](http://weirdal.com/)
