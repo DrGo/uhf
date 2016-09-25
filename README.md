@@ -15,7 +15,7 @@ It's probably better to just copy and paste functions out
 of this package instead of actually importing the package.
 
 
-"[http://go-proverbs.github.io/](A little copying is better than a little dependency)"
+"[A little copying is better than a little dependency](http://go-proverbs.github.io/)"
 
 # Purpose 
 
