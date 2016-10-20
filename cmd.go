@@ -1,9 +1,13 @@
 package uhf
 
 import (
+	"errors"
+	"io"
 	"os"
 	"path/filepath"
 )
+
+var ErrNoInput = errors.New("no input provided")
 
 // IsInteractive returns a boolean
 // indicating whether os.Stdin is
@@ -33,4 +37,30 @@ func FileExists(path string) bool {
 		return false
 	}
 	return true
+}
+
+// InputReader returns a reader from the
+// application's input, whether this is
+// stdin or read from files on the command line.
+func InputReader() (io.Reader, error) {
+	if b, err := IsInteractive(); err == nil {
+		if !b {
+			return os.Stdin, nil
+		}
+	}
+
+	readers := make([]io.Reader, 0, 1)
+	for _, filename := range os.Args[1:] {
+		if FileExists(filename) {
+			f, err := os.Open(filename)
+			if err != nil {
+				continue
+			}
+			readers = append(readers, f)
+		}
+	}
+	if len(readers) == 0 {
+		return io.MultiReader(readers...), ErrNoInput
+	}
+	return io.MultiReader(readers...), nil
 }
