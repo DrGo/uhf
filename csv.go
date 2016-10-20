@@ -99,8 +99,7 @@ func CSVToSlice(filename string) ([][]string, error) {
 }
 
 // CSVToMapChan is a convenience for reading
-// a CSV file maps using
-// loading the entire CSV file into memory.
+// a CSV file into maps.
 func CSVToMapChan(filename string) *CSVMapChan {
 	out := &CSVMapChan{C: make(chan map[string]string)}
 	f, err := os.Open(filename)
