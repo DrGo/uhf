@@ -3,6 +3,7 @@ package uhf
 import (
 	"encoding/csv"
 	"errors"
+	"io"
 	"os"
 	"sync"
 )
@@ -76,7 +77,9 @@ func CSVToSliceChan(filename string) *CSVSliceChan {
 		for {
 			rec, err := r.Read()
 			if err != nil {
-				out.setError(err)
+				if err != io.EOF {
+					out.setError(err)
+				}
 				break
 			}
 			out.C <- rec
@@ -104,7 +107,9 @@ func CSVToMapChan(filename string) *CSVMapChan {
 	out := &CSVMapChan{C: make(chan map[string]string)}
 	f, err := os.Open(filename)
 	if err != nil {
-		out.setError(err)
+		if err != io.EOF {
+			out.setError(err)
+		}
 		return out
 	}
 
@@ -114,7 +119,9 @@ func CSVToMapChan(filename string) *CSVMapChan {
 		r := csv.NewReader(f)
 		headers, err := r.Read()
 		if err != nil {
-			out.setError(err)
+			if err != io.EOF {
+				out.setError(err)
+			}
 			return
 		}
 		numCols := len(headers)
@@ -122,7 +129,9 @@ func CSVToMapChan(filename string) *CSVMapChan {
 			m := make(map[string]string)
 			rec, err := r.Read()
 			if err != nil {
-				out.setError(err)
+				if err != io.EOF {
+					out.setError(err)
+				}
 				break
 			}
 			if len(rec) != numCols {
